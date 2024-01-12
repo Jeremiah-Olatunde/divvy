@@ -1,0 +1,17 @@
+{
+  "name": "divvy",
+  "version": "1.0.0",
+  "description": "data analysis of google coursera course case study on divvy trips",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "data analysis",
+    "csv",
+    "case",
+    "study"
+  ],
+  "author": "Jesuseun Jeremiah Olatunde",
+  "license": "ISC"
+}
