@@ -13,5 +13,11 @@
     "study"
   ],
   "author": "Jesuseun Jeremiah Olatunde",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "csv": "^6.3.6"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.5"
+  }
 }
