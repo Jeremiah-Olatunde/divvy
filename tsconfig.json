@@ -16,7 +16,5 @@
             ]
         }
     },
-    "include": [
-        "src/**/*"
-    ]
+    "include": ["src/**/*", "dist/public/**/*"]
 }
