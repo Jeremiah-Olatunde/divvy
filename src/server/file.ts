@@ -56,3 +56,28 @@ export function forEach(
     readline.on("error", reject);
   });
 }
+
+export function reduce<T>(
+  source: string, 
+  destination: string,
+  base: T,
+  reducer: (accumulated: T, line: string, index: number) => T
+): Promise<T> {
+  let i: number = 0;
+
+  const readline = createInterface(createReadStream(source, { encoding: "utf-8"}));
+  const wstream = createWriteStream(destination, { encoding: "utf-8"});
+
+  readline.on("line", line => {
+    base = reducer(base, line, i++);
+  }); 
+
+  return new Promise((resolve, reject) => {
+    readline.on("close", () => {
+      wstream.write(JSON.stringify(base, null, 2));
+      resolve(base);
+    })
+
+    readline.on("error", reject);
+  })
+}
