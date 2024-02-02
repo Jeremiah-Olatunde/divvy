@@ -42,3 +42,17 @@ export function filter(
     wstream.on("error", reject);
   });
 }
+
+export function forEach(
+  source: string,
+  callback: (line: string, index: number) => void
+): Promise<void> {
+  let i: number = 0;
+  const readline = createInterface(createReadStream(source, { encoding: "utf-8"}));
+  readline.on("line", line => callback(line, i++));
+  
+  return new Promise((resolve, reject) => {
+    readline.on("close", resolve);
+    readline.on("error", reject);
+  });
+}
