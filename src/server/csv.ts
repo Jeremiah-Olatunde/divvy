@@ -45,3 +45,25 @@ export function forEach(
     return callback(record, i - 1);
   });
 }
+
+export function filter(
+  source: string,
+  destination: string,
+  predicate: (record: Record, index: number) =>  boolean,
+): Promise<void> {
+  const headers: string[] = [];
+  const record: Record = Object.create(null);
+
+  return file.filter(source, destination, (line, i) => {
+    const row = line.split(",");
+
+    if(i === 0){
+      row.forEach((header, j) => headers[j] = header);
+      return false;
+    };
+    
+    row.forEach((colVal, i) => record[headers[i]] = colVal);
+    
+    return predicate(record, i - 1);
+  });
+}
