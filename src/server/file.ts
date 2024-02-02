@@ -21,3 +21,24 @@ export function map(
     wstream.on("error", reject);
   });
 }
+
+export function filter(
+  source: string,
+  destination: string,
+  predicate: (line: string, index: number) => boolean
+): Promise<void> {
+  let i: number = 0;
+
+  const readline = createInterface(createReadStream(source, { encoding: "utf-8"}));
+  const wstream = createWriteStream(destination, { encoding: "utf-8"});
+
+  readline.on("line", line => {
+    predicate(line, i++) || wstream.write(line) + "\n";
+  });
+
+  return new Promise((resolve, reject) => {
+    readline.on("close", resolve);
+    readline.on("error", reject);
+    wstream.on("error", reject);
+  });
+}
