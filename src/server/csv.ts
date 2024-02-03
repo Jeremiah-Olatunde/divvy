@@ -14,7 +14,7 @@ export function map(
     const row = line.split(",");
 
     if(i === 0){
-      row.forEach((header, j) => headers[j] = header);
+      row.forEach(header => headers.push(header));
       return row.join(",");
     };
 
@@ -36,7 +36,7 @@ export function forEach(
     const row = line.split(",");
 
     if(i === 0){
-      row.forEach((header, j) => headers[j] = header);
+      row.forEach(header => headers.push(header));
       return row.join(",");
     };
 
@@ -58,7 +58,7 @@ export function filter(
     const row = line.split(",");
 
     if(i === 0){
-      row.forEach((header, j) => headers[j] = header);
+      row.forEach(header => headers.push(header));
       return false;
     };
     
@@ -81,7 +81,7 @@ export function fold<T>(
     const row = line.split(",");
 
     if(i === 0){
-      row.forEach((header, j) => headers[j] = header);
+      row.forEach(header => headers.push(header));
       return accum;
     };
 
