@@ -83,3 +83,17 @@ export function fold<T>(
     readline.on("error", reject);
   })
 }
+
+export async function every(
+  source: string,
+  predicate: (line: string, index: number) => boolean
+): Promise<boolean> {
+  return await fold(source, null, true, (p, l, i) => p && predicate(l, i))
+}
+
+export async function some(
+  source: string,
+  predicate: (line: string, index: number) => boolean
+): Promise<boolean> {
+  return await fold(source, null, true, (p, l, i) => p || predicate(l, i))
+}
