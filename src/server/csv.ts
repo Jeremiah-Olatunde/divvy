@@ -90,3 +90,20 @@ export function fold<T>(
     return reducer(accum, record, i - 1);
   });
 }
+
+export async function align(
+  source: string,
+  destination: string
+): Promise<void> {
+
+  const width = await file.fold(source, null, [] as number[], (width, line, i) => {
+    const row = line.split(",");
+    return row.map((v, i) => width[i] = Math.max(width[i] ?? 0, v.length));
+  });
+
+  await file.map(source, destination, line => {
+    const row = line.split(",");
+    const padded = row.map((v, i) => v.padEnd(width[i]));
+    return padded.join(",");
+  });
+}
