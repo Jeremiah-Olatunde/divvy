@@ -15,12 +15,12 @@ const app = express();
 const data = "./src/server/dataset/primary.csv";
 
 app.get("/member-casual-count", async function(_, res){
- /**
-  * return {
-  *   member: [count],
-  *   casual: [count],
-  * }
- */
+  const result = await csv.fold(data, null, { casual: [0], member: [0] }, (p, record) => {
+    p[record["member_casual"] as "member" | "casual"][0] += 1;
+    return p;
+  })
+
+  res.json(JSON.stringify(result));
 });
 
 app.get("/trip-count-month", async function(_, res){
