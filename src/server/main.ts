@@ -55,7 +55,7 @@ app.get("/trip-duration-month", async function(_, res){
 
       const month = started.getMonth();
       p[status][month] += duration;
-      
+
       return p;
     }
   );  
@@ -64,12 +64,18 @@ app.get("/trip-duration-month", async function(_, res){
 });
 
 app.get("/trip-duration-year", async function(_, res){
-  /**
-   * return {
-   *  member: [count],
-   *  casual: [count]
-   * }
-  */
+  const result = await csv.fold(data, null, { casual: [0], member: [0] }, (p, record) => {
+    const status = record["member_casual"] as "member" | "casual";
+
+    const started = new Date(record["started_at"].split(" ").join("T"));
+    const ended = new Date(record["ended_at"].split(" ").join("T"));
+    const duration = ended.getTime() - started.getTime();
+
+    p[status][0] += duration;
+    return p;
+  });
+
+  res.json(JSON.stringify(result));
 });
 
 
