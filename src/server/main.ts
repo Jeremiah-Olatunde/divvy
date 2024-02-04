@@ -8,23 +8,11 @@ const app = express();
 
 /**
  * GENERAL METRICS
- * total number of (members | casuals)
  * total number of rides for each (month | year)
  * total ride durations for each (month | year)
 */
 
 const data = "./src/server/dataset/primary.csv";
-
-
-
-app.get("/member-casual-count", async function(_, res){
-  const result = await csv.fold(data, null, { casual: [0], member: [0] }, (p, record) => {
-    p[record["member_casual"] as "member" | "casual"][0] += 1;
-    return p;
-  });
-
-  res.json(JSON.stringify(result));
-});
 
 app.get("/trip-count-month", async function(_, res){
   const result = await csv.fold(
@@ -45,12 +33,12 @@ app.get("/trip-count-month", async function(_, res){
 
 
 app.get("/trip-count-year", async function(_, res){
-  /**
-   * return {
-   *  member: [count],
-   *  casual: [count]
-   * }
-  */
+  const result = await csv.fold(data, null, { casual: [0], member: [0] }, (p, record) => {
+    p[record["member_casual"] as "member" | "casual"][0] += 1;
+    return p;
+  });
+
+  res.json(JSON.stringify(result));
 });
 
 app.get("/trip-duration-month", async function(_, res){
