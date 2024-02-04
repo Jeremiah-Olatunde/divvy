@@ -70,7 +70,7 @@ export function filter(
 
 export function fold<T>(
   source: string, 
-  destination: string,
+  destination: string | null,
   base: T,
   reducer: (accumulated: T, record: Record, index: number) => T
 ): Promise<T> {
