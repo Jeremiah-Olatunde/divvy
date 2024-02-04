@@ -21,8 +21,8 @@ app.get("/trip-count-month", async function(_, res){
     { casual: buildArr(12, _ => 0), member: buildArr(12, _ => 0) },
     (p, record) => {
       const status = record["member_casual"] as "member" | "casual";
-      const date = new Date(record["started_at"].split(" ").join("T"));
-      const month = date.getMonth();
+      const started = new Date(record["started_at"].split(" ").join("T"));
+      const month = started.getMonth();
       p[status][month] += 1;
       return p;
     }
@@ -42,12 +42,25 @@ app.get("/trip-count-year", async function(_, res){
 });
 
 app.get("/trip-duration-month", async function(_, res){
-  /**
-   * return {
-   *  member: [count],
-   *  casual: [count]
-   * }
-  */ 
+  const result = await csv.fold(
+    data, 
+    null, 
+    { casual: buildArr(12, _ => 0), member: buildArr(12, _ => 0) },
+    (p, record) => {
+      const status = record["member_casual"] as "member" | "casual";
+
+      const started = new Date(record["started_at"].split(" ").join("T"));
+      const ended = new Date(record["ended_at"].split(" ").join("T"));
+      const duration = ended.getTime() - started.getTime();
+
+      const month = started.getMonth();
+      p[status][month] += duration;
+      
+      return p;
+    }
+  );  
+
+  res.json(JSON.stringify(result));
 });
 
 app.get("/trip-duration-year", async function(_, res){
