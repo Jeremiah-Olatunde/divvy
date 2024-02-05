@@ -14,6 +14,25 @@ const app = express();
 
 const data = "./src/server/dataset/primary.csv";
 
+app.get("/trip-count-hour", async function(_, res){
+  const result = await csv.fold(
+    data, 
+    null, 
+    { casual: buildArr(24, _ => 0), member: buildArr(24, _ => 0) },
+    (p, record) => {
+      const status = record["member_casual"] as "member" | "casual";
+
+      const started = new Date(record["started_at"].split(" ").join("T"));
+      const hour = started.getHours();
+
+      p[status][hour] += 1;
+      return p;
+    }
+  );  
+
+  res.json(JSON.stringify(result));
+});
+
 app.get("/trip-count-month", async function(_, res){
   const result = await csv.fold(
     data, 
