@@ -33,6 +33,25 @@ app.get("/trip-count-hour", async function(_, res){
   res.json(JSON.stringify(result));
 });
 
+app.get("/trip-count-weekday", async function(_, res){
+  const result = await csv.fold(
+    data, 
+    null, 
+    { casual: buildArr(7, _ => 0), member: buildArr(7, _ => 0) },
+    (p, record) => {
+      const status = record["member_casual"] as "member" | "casual";
+
+      const started = new Date(record["started_at"].split(" ").join("T"));
+      const weekday = started.getDay();
+
+      p[status][weekday] += 1;
+      return p;
+    }
+  );  
+
+  res.json(JSON.stringify(result));
+});
+
 app.get("/trip-count-month", async function(_, res){
   const result = await csv.fold(
     data, 
@@ -50,12 +69,34 @@ app.get("/trip-count-month", async function(_, res){
   res.json(JSON.stringify(result));
 });
 
-
 app.get("/trip-count-year", async function(_, res){
   const result = await csv.fold(data, null, { casual: [0], member: [0] }, (p, record) => {
     p[record["member_casual"] as "member" | "casual"][0] += 1;
     return p;
   });
+
+  res.json(JSON.stringify(result));
+});
+
+
+app.get("/trip-duration-weekday", async function(_, res){
+  const result = await csv.fold(
+    data, 
+    null, 
+    { casual: buildArr(7, _ => 0), member: buildArr(7, _ => 0) },
+    (p, record) => {
+      const status = record["member_casual"] as "member" | "casual";
+
+      const started = new Date(record["started_at"].split(" ").join("T"));
+      const ended = new Date(record["ended_at"].split(" ").join("T"));
+      const duration = ended.getTime() - started.getTime();
+
+      const weekday = started.getDay();
+      p[status][weekday] += duration;
+
+      return p;
+    }
+  );  
 
   res.json(JSON.stringify(result));
 });
