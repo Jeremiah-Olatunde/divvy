@@ -74,3 +74,40 @@ async function tripCountHour(){
   })
 
 } 
+
+async function tripCountWeekday(){
+  
+  const { member, casual }: Response = JSON.parse(await (await fetch("/trip-count-weekday")).json());
+  member.push(member.shift()!)
+  casual.push(casual.shift()!)
+
+  
+  new Chart(document.getElementById("chart") as HTMLCanvasElement, {
+    type: "line",
+    data: {
+      labels: [
+        "MON", "TUE", "WED", "THU", 
+        "FRI", "SAT", "SUN"
+      ],
+      datasets: [
+        {
+          label: 'MEMBERS',
+          data: member,
+          fill: false,
+          borderColor: 'lightcoral',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },      
+        {
+          label: 'CASUALS',
+          data: casual,
+          fill: false,
+          borderColor: 'turquoise',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.1
+        },
+      ]
+    }
+  })
+
+} 
