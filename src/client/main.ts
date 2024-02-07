@@ -111,3 +111,41 @@ async function tripCountWeekday(){
   })
 
 } 
+
+async function tripCountMonth(){
+  
+  const { member, casual }: Response = JSON.parse(await (await fetch("/trip-count-month")).json());
+  console.log(member)
+  console.log(casual)
+
+  
+  new Chart(document.getElementById("chart") as HTMLCanvasElement, {
+    type: "line",
+    data: {
+      labels: [
+        "JAN", "FEB", "MAR", "APR", 
+        "MAY", "JUN", "JUL", "AUG", 
+        "SEP", "OCT", "NOV", "DEC"
+      ],
+      datasets: [
+        {
+          label: 'MEMBERS',
+          data: member,
+          fill: false,
+          borderColor: 'lightcoral',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },      
+        {
+          label: 'CASUALS',
+          data: casual,
+          fill: false,
+          borderColor: 'turquoise',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.1
+        },
+      ]
+    }
+  })
+
+} 
