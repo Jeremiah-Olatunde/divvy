@@ -149,3 +149,47 @@ async function tripCountMonth(){
   })
 
 } 
+
+async function tripDurationWeekday(){
+  
+  const { member, casual }: Response = JSON.parse(await (await fetch("/trip-duration-weekday")).json());
+  member.push(member.shift()!)
+  casual.push(casual.shift()!)
+
+  new Chart(document.getElementById("chart") as HTMLCanvasElement, {
+    type: "line",
+    data: {
+      labels: [
+        "MON", "TUE", "WED", "THU", 
+        "FRI", "SAT", "SUN"
+      ],
+      datasets: [
+        {
+          label: 'MEMBERS',
+          data: member.map(x => x * 2.77778E-7),
+          fill: false,
+          borderColor: 'lightcoral',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },      
+        {
+          label: 'CASUALS',
+          data: casual.map(x => x * 2.77778E-7),
+          fill: false,
+          borderColor: 'turquoise',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "TRIPS STARTED DURING EACH HOUR OF THE DAY"
+        }
+      }
+    }
+  })
+
+} 
