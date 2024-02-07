@@ -36,3 +36,41 @@ async function pieCasualMembers(){
 
 }
 
+async function tripCountHour(){
+  
+  const { member, casual }: Response = JSON.parse(await (await fetch("/trip-count-hour")).json());
+  
+  new Chart(document.getElementById("chart") as HTMLCanvasElement, {
+    type: "line",
+    data: {
+      labels: buildArr(24, x => `${x}:00`),
+      datasets: [
+        {
+          label: 'MEMBERS',
+          data: member,
+          fill: false,
+          borderColor: 'lightcoral',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },      
+        {
+          label: 'CASUALS',
+          data: casual,
+          fill: false,
+          borderColor: 'turquoise',
+          cubicInterpolationMode: 'monotone',
+          tension: 0.4
+        },
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "TRIPS STARTED DURING EACH HOUR OF THE DAY"
+        }
+      }
+    }
+  })
+
+} 
